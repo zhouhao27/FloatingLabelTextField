@@ -12,11 +12,14 @@ import FloatingLabelTextField
 struct ContentView: View {
   @State var name = ""
   @State var age = ""
+  @State var password = ""
   
   var body: some View {
     VStack {
       FloatingLabelTextField(placeHolder: "Input your name", text: $name)
       FloatingLabelTextField(placeHolder: "Input your age", text: $age)
+      FloatingLabelTextField(placeHolder: "Password", text: $password, isSecure: true)
+
     }
   }
 }

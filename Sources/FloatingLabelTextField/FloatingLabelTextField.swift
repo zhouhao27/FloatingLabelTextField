@@ -8,11 +8,13 @@ public struct FloatingLabelTextField: View {
   private var placeHolderValue: String = ""
   @Binding var text: String
   @State private var isActive: Bool = false
+  @State private var isSecure: Bool = false
   
   public init(placeHolder: String = "Please Input",
-              text: Binding<String> = .constant("")) {
+              text: Binding<String> = .constant(""), isSecure: Bool = false) {
     self._text = text
     self.placeHolderValue = placeHolder
+    self._isSecure = State(initialValue: isSecure)
   }
   
   private func updateEditMode(edit: Bool) {
@@ -34,11 +36,21 @@ public struct FloatingLabelTextField: View {
     let lineColor = self.isActive ? Color.blue : Color.gray
     
     return VStack(alignment: .leading) {
+      
       Text(placeHolderLabel).font(.footnote).foregroundColor(.gray)
-      TextField(placeHolder, text: $text, onEditingChanged: { (edit) in
-        self.updateEditMode(edit: edit)
-      }).onAppear {
-        self.placeHolder = self.placeHolderValue
+      if isSecure {
+        SecureField(placeHolder, text: $text)
+        .onAppear() {
+          self.placeHolder = self.placeHolderValue
+        }.onTapGesture {
+          self.updateEditMode(edit: true)
+        }
+      } else {
+        TextField(placeHolder, text: $text, onEditingChanged: { (edit) in
+          self.updateEditMode(edit: edit)
+        }).onAppear {
+          self.placeHolder = self.placeHolderValue
+        }
       }
 
 //      Divider()
